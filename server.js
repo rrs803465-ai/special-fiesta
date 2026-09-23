@@ -6,10 +6,7 @@ const { Server } = require('socket.io');
 const session = require('express-session');
 const ConnectSQLite = require('connect-sqlite3')(session);
 const path = require('path');
-
-const authRoutes = require('./src/routes/auth');
-const chatRoutes = require('./src/routes/chat');
-const { initSocket } = require('./src/socket');
+const { initDb } = require('./src/db');
 
 const app = express();
 const server = http.createServer(app);
@@ -19,35 +16,31 @@ const sessionMiddleware = session({
   secret: process.env.SESSION_SECRET || 'zacier_dev_secret',
   resave: false,
   saveUninitialized: false,
-  cookie: {
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-    httpOnly: true,
-    sameSite: 'lax'
-  }
+  cookie: { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'lax' }
 });
 
-const io = new Server(server, {
-  cors: { origin: false }
-});
+const io = new Server(server, { cors: { origin: false } });
 
 app.use(sessionMiddleware);
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-
 io.engine.use(sessionMiddleware);
 
-app.use('/api/auth', authRoutes);
-app.use('/api/chat', chatRoutes);
+initDb().then(() => {
+  const authRoutes = require('./src/routes/auth');
+  const chatRoutes = require('./src/routes/chat');
+  const { initSocket } = require('./src/socket');
 
-app.get('/health', (_, res) => res.json({ status: 'ok' }));
+  app.use('/api/auth', authRoutes);
+  app.use('/api/chat', chatRoutes);
+  app.get('/health', (_, res) => res.json({ status: 'ok' }));
+  app.get('*', (_, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
-app.get('*', (_, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+  initSocket(io);
 
-initSocket(io);
-
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Zacier running on port ${PORT}`);
+  const PORT = process.env.PORT || 3000;
+  server.listen(PORT, () => console.log(`Zacier on ${PORT}`));
+}).catch(err => {
+  console.error('DB init failed:', err);
+  process.exit(1);
 });
