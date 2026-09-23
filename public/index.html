@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Zacier</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+
+<div id="bg-art">
+  <div class="blob blob-taupe"></div>
+  <div class="blob blob-slate"></div>
+  <div class="blob blob-mid"></div>
+  <svg class="leaf-svg leaf-tl" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g fill="#3D4A4A" opacity="0.82">
+      <path d="M28 148 Q16 78 62 36 Q84 16 128 8 Q94 52 82 74 Q70 96 64 138 Z"/>
+      <rect x="44" y="20" width="3" height="124" rx="1.5" transform="rotate(-48 44 20)" opacity="0.5"/>
+      <ellipse cx="100" cy="26" rx="15" ry="8" transform="rotate(-48 100 26)"/>
+      <ellipse cx="82" cy="46" rx="13" ry="7" transform="rotate(-52 82 46)"/>
+      <ellipse cx="66" cy="66" rx="12" ry="6.5" transform="rotate(-56 66 66)"/>
+      <ellipse cx="52" cy="86" rx="11" ry="6" transform="rotate(-60 52 86)"/>
+      <ellipse cx="42" cy="106" rx="10" ry="5.5" transform="rotate(-63 42 106)"/>
+    </g>
+  </svg>
+  <svg class="leaf-svg leaf-br" viewBox="0 0 200 210" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g fill="#3D4A4A" opacity="0.78">
+      <rect x="96" y="6" width="5" height="180" rx="2.5"/>
+      <ellipse cx="70" cy="58" rx="19" ry="9" transform="rotate(138 70 58)"/>
+      <ellipse cx="60" cy="88" rx="18" ry="8.5" transform="rotate(140 60 88)"/>
+      <ellipse cx="52" cy="117" rx="16" ry="8" transform="rotate(143 52 117)"/>
+      <ellipse cx="48" cy="144" rx="14" ry="7" transform="rotate(146 48 144)"/>
+      <ellipse cx="130" cy="58" rx="19" ry="9" transform="rotate(42 130 58)"/>
+      <ellipse cx="140" cy="88" rx="18" ry="8.5" transform="rotate(40 140 88)"/>
+      <ellipse cx="148" cy="117" rx="16" ry="8" transform="rotate(37 148 117)"/>
+      <ellipse cx="152" cy="144" rx="14" ry="7" transform="rotate(34 152 144)"/>
+    </g>
+  </svg>
+</div>
+
+<!-- Intro -->
+<div class="screen" id="intro-screen">
+  <div class="intro-line" id="il-1">A space for learning.</div>
+  <div class="intro-line" id="il-2">Anonymous. Safe. Yours.</div>
+  <div class="intro-brand" id="il-brand">Zacier</div>
+</div>
+
+<!-- Auth -->
+<div class="screen" id="auth-screen">
+  <div class="card">
+    <div class="card-logo">Zacier</div>
+    <h2 id="auth-heading">Welcome back</h2>
+    <p class="card-sub" id="auth-sub">Sign in to continue.</p>
+
+    <div class="msg-banner error" id="auth-error"></div>
+    <div class="msg-banner success" id="auth-success"></div>
+
+    <div id="role-picker" style="display:none">
+      <div class="role-row">
+        <button class="role-btn" id="role-teacher" onclick="selectRole('teacher')">
+          <div class="role-icon">🎓</div>
+          <div class="role-label">Teacher</div>
+          <div class="role-desc">Educator access</div>
+        </button>
+        <button class="role-btn" id="role-student" onclick="selectRole('student')">
+          <div class="role-icon">📚</div>
+          <div class="role-label">Student</div>
+          <div class="role-desc">Learner access</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="auth-email" placeholder="you@school.edu">
+    </div>
+    <div class="field" style="margin-bottom:22px">
+      <label>Password</label>
+      <input type="password" id="auth-password" placeholder="••••••••">
+    </div>
+
+    <button class="btn btn-primary" id="auth-submit-btn">Sign in</button>
+    <div class="toggle-link" id="auth-toggle">
+      No account? <a onclick="toggleAuth()">Create one</a>
+    </div>
+  </div>
+</div>
+
+<!-- Gate -->
+<div class="screen" id="gate-screen">
+  <div class="card">
+    <div class="card-logo">Zacier</div>
+    <h2>Quick check</h2>
+    <p class="card-sub" id="gate-sub">Answer 3 questions to verify your identity.</p>
+
+    <div class="gate-dots" id="gate-dots">
+      <div class="gate-dot active" id="gdot-0"></div>
+      <div class="gate-dot" id="gdot-1"></div>
+      <div class="gate-dot" id="gdot-2"></div>
+    </div>
+
+    <div class="question-card">
+      <div class="q-label">Question <span id="gq-num">1</span> of 3</div>
+      <div class="q-text" id="gq-text">—</div>
+    </div>
+
+    <div class="field">
+      <label>Your answer</label>
+      <input type="text" id="gate-input" placeholder="Type here...">
+    </div>
+
+    <div class="msg-banner error" id="gate-error"></div>
+    <div class="thinking" id="gate-thinking">
+      <div class="spinner"></div>
+      <span>Checking...</span>
+    </div>
+
+    <button class="btn btn-primary" id="gate-btn" onclick="submitGate()">Submit answer</button>
+    <p style="font-size:11.5px;color:var(--text-faint);text-align:center;margin-top:14px;line-height:1.5">
+      Answers are checked for understanding, not exact wording.
+    </p>
+  </div>
+</div>
+
+<!-- Onboarding (students only) -->
+<div class="screen" id="onboard-screen">
+  <div class="card" style="max-width:500px">
+    <div class="card-logo">Zacier</div>
+    <h2>Tell us about yourself</h2>
+    <p class="card-sub">This helps us match you with the right teacher and tutor.</p>
+
+    <div class="onboard-step active" id="os-1">
+      <div class="step-label">Step 1 of 4</div>
+      <div class="step-question">What grade are you in?</div>
+      <div class="option-grid" id="og-grade">
+        <button class="option-chip" onclick="pickOption('grade',this,'6th Grade')">6th Grade</button>
+        <button class="option-chip" onclick="pickOption('grade',this,'7th Grade')">7th Grade</button>
+        <button class="option-chip" onclick="pickOption('grade',this,'8th Grade')">8th Grade</button>
+        <button class="option-chip" onclick="pickOption('grade',this,'9th Grade')">9th Grade</button>
+        <button class="option-chip" onclick="pickOption('grade',this,'10th Grade')">10th Grade</button>
+        <button class="option-chip" onclick="pickOption('grade',this,'11th Grade')">11th Grade</button>
+        <button class="option-chip" onclick="pickOption('grade',this,'12th Grade')">12th Grade</button>
+        <button class="option-chip" onclick="pickOption('grade',this,'College')">College</button>
+      </div>
+      <button class="btn btn-primary" onclick="nextOnboard(1)">Continue</button>
+    </div>
+
+    <div class="onboard-step" id="os-2">
+      <div class="step-label">Step 2 of 4</div>
+      <div class="step-question">Which subjects do you find hardest?</div>
+      <div class="option-grid" id="og-struggles">
+        <button class="option-chip" onclick="toggleMulti('struggles',this,'Math')">Math</button>
+        <button class="option-chip" onclick="toggleMulti('struggles',this,'Science')">Science</button>
+        <button class="option-chip" onclick="toggleMulti('struggles',this,'English')">English</button>
+        <button class="option-chip" onclick="toggleMulti('struggles',this,'History')">History</button>
+        <button class="option-chip" onclick="toggleMulti('struggles',this,'Languages')">Languages</button>
+        <button class="option-chip" onclick="toggleMulti('struggles',this,'Art')">Art</button>
+        <button class="option-chip" onclick="toggleMulti('struggles',this,'PE')">PE</button>
+        <button class="option-chip" onclick="toggleMulti('struggles',this,'CS')">CS</button>
+      </div>
+      <button class="btn btn-primary" onclick="nextOnboard(2)">Continue</button>
+    </div>
+
+    <div class="onboard-step" id="os-3">
+      <div class="step-label">Step 3 of 4</div>
+      <div class="step-question">How do you learn best?</div>
+      <div class="option-grid" id="og-style">
+        <button class="option-chip" onclick="pickOption('style',this,'Reading & Notes')">Reading & Notes</button>
+        <button class="option-chip" onclick="pickOption('style',this,'Watching & Listening')">Watching & Listening</button>
+        <button class="option-chip" onclick="pickOption('style',this,'Practice Problems')">Practice Problems</button>
+        <button class="option-chip" onclick="pickOption('style',this,'Discussions')">Discussions</button>
+        <button class="option-chip" onclick="pickOption('style',this,'Visual Diagrams')">Visual Diagrams</button>
+        <button class="option-chip" onclick="pickOption('style',this,'Hands-On')">Hands-On</button>
+      </div>
+      <button class="btn btn-primary" onclick="nextOnboard(3)">Continue</button>
+    </div>
+
+    <div class="onboard-step" id="os-4">
+      <div class="step-label">Step 4 of 4</div>
+      <div class="step-question">How would you describe your class performance?</div>
+      <div class="option-grid" id="og-perf">
+        <button class="option-chip" onclick="pickOption('performance',this,'Struggling — need a lot of help')">Struggling</button>
+        <button class="option-chip" onclick="pickOption('performance',this,'Below average — getting by')">Below average</button>
+        <button class="option-chip" onclick="pickOption('performance',this,'Average — doing okay')">Average</button>
+        <button class="option-chip" onclick="pickOption('performance',this,'Above average — mostly fine')">Above average</button>
+        <button class="option-chip" onclick="pickOption('performance',this,'Strong — want to go deeper')">Strong</button>
+      </div>
+      <div class="msg-banner error" id="onboard-error" style="margin-top:14px"></div>
+      <button class="btn btn-primary" style="margin-top:4px" onclick="submitOnboard()">Enter Zacier</button>
+    </div>
+  </div>
+</div>
+
+<!-- App -->
+<div class="screen app-screen" id="app-screen">
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">Zacier</div>
+      <div class="sidebar-user" id="sb-user">—</div>
+      <div class="sidebar-role-badge" id="sb-badge">—</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Spaces</div>
+      <div class="nav-item" id="nav-lounge" onclick="openPanel('lounge')" style="display:none">
+        <span class="nav-icon">💬</span>
+        <span class="nav-label">Teacher Lounge</span>
+      </div>
+      <div class="nav-item" id="nav-commons" onclick="openPanel('commons')" style="display:none">
+        <span class="nav-icon">🏫</span>
+        <span class="nav-label">Student Commons</span>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Direct</div>
+      <div class="nav-item" id="nav-tutor" onclick="openPanel('tutor')" style="display:none">
+        <span class="nav-icon">🤖</span>
+        <span class="nav-label">AI Tutor</span>
+      </div>
+      <div class="nav-item" id="nav-myteacher" onclick="openMyTeacher()" style="display:none">
+        <span class="nav-icon">🎓</span>
+        <span class="nav-label">My Teacher</span>
+      </div>
+      <div class="nav-item" onclick="openPanel('dms')">
+        <span class="nav-icon">✉️</span>
+        <span class="nav-label">Messages</span>
+        <div class="nav-badge" id="dm-badge" style="display:none">0</div>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="doLogout()">
+        <span>Sign out</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="main-content">
+
+    <!-- Teacher Lounge -->
+    <div class="panel" id="panel-lounge">
+      <div class="chat-header">
+        <div class="chat-header-info">
+          <h3>Teacher Lounge</h3>
+          <p>Anonymous • Teachers only</p>
+        </div>
+        <div class="online-pill">
+          <div class="online-dot"></div>
+          <span id="online-count">—</span>
+        </div>
+      </div>
+      <div class="messages-area" id="msgs-lounge">
+        <div class="empty-state" id="empty-lounge">
+          <div class="empty-state-icon">💬</div>
+          <p>No messages yet. Start the conversation.</p>
+        </div>
+      </div>
+      <div class="typing-bar" id="typing-lounge"></div>
+      <div class="input-area">
+        <textarea class="chat-textarea" id="input-lounge" placeholder="Message the lounge..." rows="1"></textarea>
+        <button class="send-btn" onclick="sendRoom('teacher-lounge','lounge')">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Student Commons -->
+    <div class="panel" id="panel-commons">
+      <div class="chat-header">
+        <div class="chat-header-info">
+          <h3>Student Commons</h3>
+          <p>Anonymous • Students only</p>
+        </div>
+        <div class="online-pill">
+          <div class="online-dot"></div>
+          <span id="online-count-2">—</span>
+        </div>
+      </div>
+      <div class="messages-area" id="msgs-commons">
+        <div class="empty-state" id="empty-commons">
+          <div class="empty-state-icon">🏫</div>
+          <p>Quiet in here. Say something.</p>
+        </div>
+      </div>
+      <div class="typing-bar" id="typing-commons"></div>
+      <div class="input-area">
+        <textarea class="chat-textarea" id="input-commons" placeholder="Message the commons..." rows="1"></textarea>
+        <button class="send-btn" onclick="sendRoom('student-commons','commons')">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- AI Tutor -->
+    <div class="panel" id="panel-tutor">
+      <div class="chat-header">
+        <div class="chat-header-info">
+          <h3>AI Tutor</h3>
+          <p>Your personal learning guide</p>
+        </div>
+      </div>
+      <div class="messages-area" id="msgs-tutor">
+        <div class="empty-state" id="empty-tutor">
+          <div class="empty-state-icon">🤖</div>
+          <p>Ask anything. Your tutor is ready.</p>
+        </div>
+      </div>
+      <div class="typing-bar" id="typing-tutor"></div>
+      <div class="input-area">
+        <textarea class="chat-textarea" id="input-tutor" placeholder="Ask your tutor..." rows="1"></textarea>
+        <button class="send-btn" onclick="sendTutor()">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- DMs list -->
+    <div class="panel" id="panel-dms">
+      <div class="chat-header">
+        <div class="chat-header-info">
+          <h3>Messages</h3>
+          <p>Private conversations</p>
+        </div>
+      </div>
+      <div class="messages-area" id="dm-user-list" style="gap:2px">
+        <div class="empty-state" id="empty-dms">
+          <div class="empty-state-icon">✉️</div>
+          <p>Select someone from the list below.</p>
+        </div>
+      </div>
+      <div style="padding:14px 20px;border-top:0.5px solid var(--border-mid)">
+        <input type="text" id="dm-search" placeholder="Search users..." style="margin-bottom:0" oninput="filterDmUsers()">
+      </div>
+    </div>
+
+    <!-- DM thread -->
+    <div class="panel" id="panel-dm-thread">
+      <div class="chat-header">
+        <div class="chat-header-info">
+          <h3 id="dm-thread-name">—</h3>
+          <p id="dm-thread-role">Direct message</p>
+        </div>
+        <button class="btn btn-ghost" style="width:auto;padding:6px 12px;font-size:13px;margin:0" onclick="openPanel('dms')">← Back</button>
+      </div>
+      <div class="messages-area" id="msgs-dm">
+        <div class="empty-state" id="empty-dm">
+          <div class="empty-state-icon">✉️</div>
+          <p>No messages yet.</p>
+        </div>
+      </div>
+      <div class="typing-bar" id="typing-dm"></div>
+      <div class="input-area">
+        <textarea class="chat-textarea" id="input-dm" placeholder="Send a message..." rows="1"></textarea>
+        <button class="send-btn" onclick="sendDm()">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>
