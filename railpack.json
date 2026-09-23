@@ -1,4 +1,7 @@
 {
   "$schema": "https://schema.railpack.com",
-  "buildAptPackages": ["python3", "make", "g++"]
+  "buildAptPackages": ["python3", "make", "g++"],
+  "build": {
+    "cmd": "npm install"
+  }
 }
